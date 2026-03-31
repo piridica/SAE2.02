@@ -92,6 +92,21 @@ Etat de développement : fini, non testé
                 # Récupère la taille en octets
                 taille = os.path.getsize(chemin_complet)
                 print(f"Le fichier : {nom_fichier} pèse {taille} octets")
+                
+                
+"""
+@arguments : directory est un chemin d'accès vers un répertoire.
+Méthode permettant d'afficher une liste des fichiers contenus dans un répértoire.
+"""
+    def affiche_fichiers( directory ):
+        # Liste seulement les fichiers en excluant les sous-répertoires
+        files = [ f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) ]
+        # affichage de l'ensemble des fichiers situés dans le dossier
+        print("Veuillez choisir parmi les oeuvres suivantes : ")
+        for i, file in enumerate(files, start = 1) :
+            print(f"{i} : {file}")
+
+
 '''
 @arguments : chemin d'accès
 @return : poids du répertoire contenant les textes. (devrait fonctionner pour les fichiers encodés mais aussi pour les fichiers initiaux.)
@@ -136,13 +151,44 @@ Etat de développement : fini, non testé
         print(f"Nombre de caractères distincts dans la chaîne : "len(myset))
         
 '''
-@return : chaine_car_distincts
+lire_txt()
+@return : contenu du fichier séléctionné
 Etat de développement : non fini, non testé
 '''
-    def lire_txt()
-        choix = input("Veuillez choisir parmi les oeuvres suivantes : ")
-        for i in range contenu_dossier :
-            print(f"{i} : {contenu_dossier[i]}")
-            
-        #switch:
+    def lire_txt() :
+        content = ""            # Déclaration/Initialisation du contenu extrait du fichier.txt, initialement vide. (str)
+        continuer = True        # condition d'arrêt de la première boucle, intégrant la totalité de la fonction
+        continuer_bis = True    # condition d'arrêt de la boucle imbriquée, responsable du choix du dossier par l'utilisateur
+        directory = ""          # Affectation du chemin d'accès du répertoire comme chaîne de caractères vide.
         
+        while continuer :
+            
+            while continuer_bis :   # boucle responsable du choix du dossier : compressé ou brut
+                choix_dossier = input("Souhaitez vous lire : \n1 : les fichiers compressés \n 2 : les fichiers bruts?")
+                if choix_dossier == 1 :     # fichiers bruts
+                    directory = "/input"    # affectation du chemin d'accès menant vers le répertoire contenant les fichiers bruts
+                    continuer_bis = False   # la boucle imbriquée s'interrompt
+                elif choix_dossier == 2 :   # fichiers compressés
+                    directory = "/input_compressed" # affectation du chemin d'accès menant vers le répertoire contenant les fichiers compressés
+                    continuer_bis = False   # la boucle imbriquée s'interrompt
+                else :
+                    print("Veuillez réinsérer une valeur valide.")
+                    continuer_bis = True    # la boucle imbriquée poursuit
+            
+            affiche_fichiers(directory) # appel de procédure permettant d'afficher l'ensemble des fichiers du dossier séléctionné
+            choix = input("Votre choix : ")
+            try :
+                choix_int = int(choix) - 1  # Convertir en index (0-based)
+                if 0 <= choix_int < len(files) :    # Vérification que l'utiulisateur n'a pas inséré une valeur supérieure au nombre de fichiers
+                    print(f"Vous avez choisi {files[ choix_int ]}")     # Affichage du fichier séléctionné dans la console
+                    with open(os.path.join(directory, files[ choix_int ]), 'r') as f :  # ouvre le fichier en mode lecture
+                        content = f.read()  # affecte le contenu du fichier à la variable content. format str
+                    continuer = False   # interruption de la boucle principale
+                    
+                else :  # le choix de l'utilisateur n'est pas valide, cas de marge
+                    print("Votre choix est en dehors de la plage valide. Veuillez réessayer.")
+                    
+            except ValueError : # l'input de l'utilisateur est impossible à interpréter
+                print("Veuillez entrer un nombre valide.")
+        
+        return content
