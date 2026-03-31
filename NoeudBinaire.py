@@ -55,7 +55,94 @@ class NoeudBinaire():
     def existe_arbre_d(self):
         return self.fils_d!=None
 # ------------------------------------------------------------------------------
-
-        
-        
+'''
+@arguments : poids du fichier initial, puis celui du fichier encodé
+@return : taux de compression en %
+Etat de développement : fini, non testé
+'''
+    def taux_compression(mem_txt,mem_txt_encode):
+        return ((mem_txt-mem_txt_encode)/mem_txt)*100   # à voir s'il vaut mieux conserver le *100 ou pas. les deux se vallent
     
+'''
+@arguments : chemin d'accès et nom du fichier à peser
+@return : poids du fichier concerné
+@errors : fichier n'existe pas à cet emplacement
+Etat de développement : fini, non testé
+'''
+    def get_file_size( nom_fichier ) :
+        # Vérifie si le fichier existe pour éviter les erreurs
+        if os.path.isfile(nom_fichier) :
+            size = os.path.getsize(nom_fichier)
+            print(f"Taille du fichier : {size} octets")
+            return size
+        else :
+            raise FileNotFoundError(f"Le fichier '{nom_fichier}' n'existe pas.")
+
+'''
+@arguments : nom_dossier
+Méthode permettant d'afficher dans la console le poids de fichiers stockés dans un certain répertoire
+Etat de développement : fini, non testé
+'''
+    def affiche_size( nom_dossier ) :
+        # Liste tous les éléments du dossier
+        for nom_fichier in os.listdir(nom_dossier) :
+            chemin_complet = os.path.join(nom_dossier, nom_fichier)
+            # Vérifie que c'est bien un fichier (pas un sous-dossier)
+            if os.path.isfile(chemin_complet) :
+                # Récupère la taille en octets
+                taille = os.path.getsize(chemin_complet)
+                print(f"Le fichier : {nom_fichier} pèse {taille} octets")
+'''
+@arguments : chemin d'accès
+@return : poids du répertoire contenant les textes. (devrait fonctionner pour les fichiers encodés mais aussi pour les fichiers initiaux.)
+Chemin d'accès envisagé : input/    et input_compressed/
+Etat de développement : fini, non testé
+'''
+    def get_dir_size(path='.'):
+        total = 0
+        with os.scandir(path) as it:
+            for entry in it:
+                if entry.is_file():
+                    total += entry.stat().st_size
+                elif entry.is_dir():
+                    total += get_dir_size(entry.path)
+        return total
+    
+#    print(get_dir_size('input'))
+#    print(get_dir_size('input_compressed'))
+'''
+@arguments : variable stockant le contenu sous format de chaîne de caractères, depuis un fichier txt
+@return : dico = { 'caractère' : nb_occurences, ... }
+Etat de développement : fini, non testé
+'''
+    def nb_ocurrences(txt):
+        dico = {}
+        for c in txt:
+            if c in dico:
+                dico[c]++
+            else:
+                dico[c] = 1
+        return dico
+
+'''
+@arguments : chaine renvoyée par lire_txt()
+@return : chaine_car_distincts
+Etat de développement : fini, non testé
+'''
+    def car_distincts(chaine):
+        myset = {}
+        for c in chaine :
+            myset.add(c)
+        print(f"Nombre de caractères distincts dans la chaîne : "len(myset))
+        
+'''
+@return : chaine_car_distincts
+Etat de développement : non fini, non testé
+'''
+    def lire_txt()
+        choix = input("Veuillez choisir parmi les oeuvres suivantes : ")
+        for i in range contenu_dossier :
+            print(f"{i} : {contenu_dossier[i]}")
+            
+        #switch:
+        
