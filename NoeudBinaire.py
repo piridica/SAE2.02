@@ -1,6 +1,6 @@
 # C5 - Samuel, Thenujan, Victor
 # Fichier NoeudBinaire.py
-
+from Assets import *
 # documentation technique :
 # https://fr.wikipedia.org/wiki/Arbre_binaire
 # Cours sur les graphes R2.07
@@ -12,7 +12,7 @@ class NoeudBinaire() :
     def __init__( self, valeur ) :
         self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
         self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
-        self.droit = None      # pareil que le gauche.
+        self.droite = None      # pareil que le gauche.
     
     
 # Getters / Setters -------------------------------------------------------------
@@ -21,7 +21,7 @@ class NoeudBinaire() :
         return self.valeur
     def set_valeur( self, valeur ) :
         if valeur == None and self.valeur != None :  # vérifie que valeur et self.valeur sont différents
-            if self.gauche != None or self.droit != None :  # vérifie si l'un des sous-arbres n'est pas vide
+            if self.gauche != None or self.droite != None :  # vérifie si l'un des sous-arbres n'est pas vide
                 raise ExpectionError("Vous ne pouvez pas supprimer un noeud ayant des sous-noeuds!")
         else :
             self.valeur = valeur  # mise à jour du noeud
@@ -32,11 +32,11 @@ class NoeudBinaire() :
     def set_gauche( self, gauche ) :
         self.gauche = gauche
     
-    # droit
-    def get_droit( self ) :
-        return self.droit
-    def set_droit( self, droit ) :
-        self.droit = droit
+    # droite
+    def get_droite( self ) :
+        return self.droite
+    def set_droite( self, droite ) :
+        self.droite = droite
     
     # ------------------------------------------------------------------------------
     # Fonctions responsables de la vérification de l'état des noeuds, et des sous-noeuds
@@ -45,23 +45,22 @@ class NoeudBinaire() :
         return self.valeur is None
     # Vérifie que le noeud n'a ni de fils gauche ni de fils droit.
     def est_feuille(self):
-        return self.valeur!=None and self.gauche==None and self.droit==None
+        return self.valeur!=None and self.gauche==None and self.droite==None
     # Vérification de l'existence d'un fils gauche
     def a_gauche(self):
         return self.gauche!=None
     # et droit
-    def a_droit(self):
-        return self.droit!=None
+    def a_droite(self):
+        return self.droite!=None
 
     def hauteur(self):
         if self.est_vide():
             return 0
         else:
-            return max(gauche.hauteur(),droit.hauteur())
+            return max(gauche.hauteur(),droite.hauteur())
     # ------------------------------------------------------------------------------
 
 # ==============================================================================
-#---------------------Préfixe et Suffixe---------------------------------------
     """
     Parcours préfixe (préordre) de l'arbre binaire:
     1. Visiter la racine
@@ -78,8 +77,8 @@ class NoeudBinaire() :
             if self.a_gauche():
                 result.extend(self.gauche.parcours_prefixe())
             # 3. Parcourir le sous-arbre droit si existe
-            if self.a_droit():
-                result.extend(self.droit.parcours_prefixe())
+            if self.a_droite():
+                result.extend(self.droite.parcours_prefixe())
         return result
 
     ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre préfixe.'''
@@ -91,28 +90,22 @@ class NoeudBinaire() :
             print(self.valeur, end=' ')  # 1. Visiter la racine
             if self.a_gauche():          # 2. Parcourir le sous-arbre gauche
                 self.gauche.afficher_prefixe()
-            if self.a_droit():          # 3. Parcourir le sous-arbre droit
-                self.droit.afficher_prefixe()
-
+            if self.a_droite():          # 3. Parcourir le sous-arbre droit
+                self.droite.afficher_prefixe()
 
     """Parcours suffixe (postordre) de l'arbre binaire:
     1. Parcourir le sous-arbre gauche
     2. Parcourir le sous-arbre droite
     3. Visiter la racine
     @return: Liste des valeurs des noeuds dans l'ordre du parcours suffixe"""
-
-    # Visiter les noeuds d'un arbre binaire en suffixe (postfixe)
-    def parcours_suffixe(self):
+    def parcours_suffixe(self):     # Visiter les noeuds d'un arbre binaire en suffixe (postfixe)
         result = []
-        # 1. Parcourir le sous-arbre gauche si existe
-        if not self.est_vide():
+        if not self.est_vide():             # 1. Parcourir le sous-arbre gauche si existe
             if self.a_gauche():
                 result.extend(self.gauche.parcours_suffixe())
-            # 2. Parcourir le sous-arbre droit si existe
-            if self.a_droit():
-                result.extend(self.droit.parcours_suffixe())
-            # 3. Visiter la racine (ajouter la valeur du noeud courant)
-            result.append(self.valeur)
+            if self.a_droite():              # 2. Parcourir le sous-arbre droit si existe
+                result.extend(self.droite.parcours_suffixe())
+            result.append(self.valeur)      # 3. Visiter la racine (ajouter la valeur du noeud courant)
         return result
 
     ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre suffixe.'''
@@ -123,173 +116,33 @@ class NoeudBinaire() :
         if not self.est_vide():
             if self.a_gauche():          # 1. Parcourir le sous-arbre gauche
                 self.gauche.afficher_suffixe()
-            if self.a_droit():           # 2. Parcourir le sous-arbre droit
-                self.droit.afficher_suffixe()
+            if self.a_droite():           # 2. Parcourir le sous-arbre droit
+                self.droite.afficher_suffixe()
             print(self.valeur, end=' ')  # 3. Visiter la racine
 
-# ==============================================================================
-
-    '''
-    @arguments : poids du fichier initial, puis celui du fichier encodé
-    @return : taux de compression en %
-    Etat de développement : fini, non testé
-    '''
-    def taux_compression( mem_txt, mem_txt_encode ) :
-        return ((mem_txt - mem_txt_encode) / mem_txt) * 100  # à voir s'il vaut mieux conserver le *100 ou pas. les deux se vallent
-    
-    '''
-    @arguments : chemin d'accès et nom du fichier à peser
-    @return : poids du fichier concerné
-    @erreurs : fichier n'existe pas à cet emplacement
-    Etat de développement : fini, non testé
-    '''
-    def get_file_size( nom_fichier ) :
-        # Vérifie si le fichier existe pour éviter les erreurs
-        if os.path.isfile(nom_fichier) :
-            size = os.path.getsize(nom_fichier)
-            print(f"Taille du fichier : {size} octets")
-            return size
-        else :
-            raise FileNotFoundError(f"Le fichier '{nom_fichier}' n'existe pas.")
-    # ------------------------------------------------------------------------------
-    
-    '''
-    @arguments : nom_dossier
-    Méthode permettant d'afficher dans la console le poids de fichiers stockés dans un certain répertoire
-    Etat de développement : fini, non testé
-    '''
-    def affiche_size( nom_dossier ) :
-        # Liste tous les éléments du dossier
-        for nom_fichier in os.listdir(nom_dossier) :
-            chemin_complet = os.path.join(nom_dossier, nom_fichier)
-            # Vérifie que c'est bien un fichier (pas un sous-dossier)
-            if os.path.isfile(chemin_complet) :
-                # Récupère la taille en octets
-                taille = os.path.getsize(chemin_complet)
-                print(f"Le fichier : {nom_fichier} pèse {taille} octets")
-    
-    # ------------------------------------------------------------------------------
-
     """
-    @arguments : directory est un chemin d'accès vers un répertoire.
-    Méthode permettant d'afficher une liste des fichiers contenus dans un répértoire.
+    Parcours infixe (en ordre) de l'arbre binaire :
+    1. Sous-arbre gauche
+    2. Racine
+    3. Sous-arbre droit
+    @return: Liste des valeurs des nœuds dans l'ordre du parcours infixe
     """
-    def affiche_fichiers( directory ) :
-        # Liste seulement les fichiers en excluant les sous-répertoires
-        files = [ f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) ]
-        # affichage de l'ensemble des fichiers situés dans le dossier
-        print("Veuillez choisir parmi les oeuvres suivantes : ")
-        for i, file in enumerate(files, start = 1) :
-            print(f"{i} : {file}")
-    
-    # ------------------------------------------------------------------------------
+    def parcours_infixe( self ) :
+        result = [ ]
+        if self.gauche :  # 1. Parcourir le sous-arbre gauche
+            result += self.gauche.parcours_infixe()
+        result.append(self.valeur)  # 2. Visiter la racine
+        if self.droite :  # 3. Parcourir le sous-arbre droit
+            result += self.droite.parcours_infixe()
+        return result
 
-    '''
-    @arguments : chemin d'accès
-    @return : poids du répertoire contenant les textes. (devrait fonctionner pour les fichiers encodés mais aussi pour les fichiers initiaux.)
-    Chemin d'accès envisagé : input/    et input_compressed/
-    Etat de développement : fini, non testé
-    '''
-    def get_dir_size(nom_dossier) :
-        total = 0
-        with os.scandir(path) as it :
-            for entry in it :
-                if entry.is_file() :
-                    total += entry.stat().st_size
-                elif entry.is_dir() :
-                    total += get_dir_size(entry.path)
-        return total
-    
-    #    print(get_dir_size('/input'))
-    #    print(get_dir_size('/input_compressed'))
-    # ------------------------------------------------------------------------------
 
-    '''
-    @arguments : variable stockant le contenu sous format de chaîne de caractères, depuis un fichier txt
-    @return : dico = { 'caractère' : nb_occurences, ... }
-    Etat de développement : fini, non testé
-    '''
-    def nb_ocurrences( txt ) :
-        dico = {}
-        for c in txt :
-            if c in dico :
-                dico[ c ] += 1
-            else :
-                dico[ c ] = 1
-        return dico
-    
-    # ------------------------------------------------------------------------------
+    """Affiche les valeurs des nœuds dans l'ordre du parcours infixe"""
+    def afficher_infixe( self ) :
 
-    '''
-    car_distincts()     Approche de Victor, à remplacer éventuellement en faveur de l'approche nb_occurrences() avec une conversion
-                        list(dico.keys()). Cette approche (Samuel) permet de conserver le nombre d'ocurrences des caractères.
-    @arguments : chaine renvoyée par lire_txt()
-    @return : chaine_car_distincts
-    Etat de développement : fini, non testé
-    '''
-    def car_distincts( chaine ) :
-        myset = {}
-        for c in chaine :
-            myset.add(c)
-        print(f"Nombre de caractères distincts dans la chaîne : ", len(myset))
-        
-        # ------------------------------------------------------------------------------
-        
-        '''
-    choix_dossier() correspond à une boucle imbriquée dans la fonction lire_txt()
-    @return directory qui correspond au chemin d'accès du dossier contenant les oeuvres au format ASCII, brut, et encodées.
-    Etat de développement : fini, non testé
-    '''
-    def choix_dossier() :
-        while continuer_bis :  # boucle responsable du choix du dossier : compressé ou brut
-            choix_dossier = input("Souhaitez vous lire : \n1 : les fichiers compressés \n 2 : les fichiers bruts?")
-            if choix_dossier == 1 :  # fichiers bruts
-                directory = "/input"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers bruts
-                continuer_bis = False  # la boucle s'interrompt
-                return directory
-            elif choix_dossier == 2 :  # fichiers compressés
-                directory = "/input_compressed"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers compressés
-                continuer_bis = False  # la boucle s'interrompt
-                return directory
-            else :
-                print("Veuillez réinsérer une valeur valide.")
-                continuer_bis = True  # la boucle poursuit
-    
-    # ------------------------------------------------------------------------------
-
-    '''
-    lire_txt() s'adapte au contenu brut et compressé.
-    @return : contenu du fichier séléctionné
-    Etat de développement : fini, non testé
-    '''
-    def lire_txt() :
-        content = ""  # Déclaration/Initialisation du contenu extrait du fichier.txt, initialement vide. (str)
-        continuer = True  # condition d'arrêt de la première boucle, intégrant la totalité de la fonction
-        continuer_bis = True  # condition d'arrêt de la boucle imbriquée, responsable du choix du dossier par l'utilisateur
-        directory = ""  # Affectation du chemin d'accès du répertoire comme chaîne de caractères vide.
-        
-        while continuer :
-            directory = choix_dossier()  # appel de la fonction permettant de choisir entre dossier brut et dossier encodé
-            affiche_fichiers(
-                directory)  # appel de procédure permettant d'afficher l'ensemble des fichiers du dossier séléctionné
-            
-            choix = input("Votre choix : ")
-            try :
-                choix_int = int(choix) - 1  # Convertir en index (0-based)
-                if 0 <= choix_int < len(
-                        files) :  # Vérification que l'utiulisateur n'a pas inséré une valeur supérieure au nombre de fichiers
-                    print(f"Vous avez choisi {files[ choix_int ]}")  # Affichage du fichier séléctionné dans la console
-                    with open(os.path.join(directory, files[ choix_int ]),
-                              'r') as f :  # ouvre le fichier en mode lecture
-                        content = f.read()  # affecte le contenu du fichier à la variable content. format str
-                    continuer = False  # interruption de la boucle principale
-                
-                else :  # le choix de l'utilisateur n'est pas valide, cas de marge
-                    print("Votre choix est en dehors de la plage valide. Veuillez réessayer.")
-            
-            except ValueError :  # l'input de l'utilisateur est impossible à interpréter
-                print("Veuillez entrer un nombre valide.")
-        
-        return content  # renvoie le contenu extrait de l'oeuvre choisie par l'utilisateur.
-
-    # ------------------------------------------------------------------------------
+            if self.gauche :  # 1. Sous-arbre gauche
+                self.gauche.afficher_infixe()
+            print(self.valeur, end = ' ')  # 2. Racine
+            if self.droite :  # 3. Sous-arbre droit
+                self.droite.afficher_infixe()
+    # ==============================================================================
