@@ -61,6 +61,7 @@ class NoeudBinaire() :
     # ------------------------------------------------------------------------------
 
 # ==============================================================================
+#---------------------Préfixe et Suffixe---------------------------------------
     """
     Parcours préfixe (préordre) de l'arbre binaire:
     1. Visiter la racine
@@ -92,6 +93,39 @@ class NoeudBinaire() :
                 self.gauche.afficher_prefixe()
             if self.a_droit():          # 3. Parcourir le sous-arbre droit
                 self.droit.afficher_prefixe()
+
+
+    """Parcours suffixe (postordre) de l'arbre binaire:
+    1. Parcourir le sous-arbre gauche
+    2. Parcourir le sous-arbre droite
+    3. Visiter la racine
+    @return: Liste des valeurs des noeuds dans l'ordre du parcours suffixe"""
+
+    # Visiter les noeuds d'un arbre binaire en suffixe (postfixe)
+    def parcours_suffixe(self):
+        result = []
+        # 1. Parcourir le sous-arbre gauche si existe
+        if not self.est_vide():
+            if self.a_gauche():
+                result.extend(self.gauche.parcours_suffixe())
+            # 2. Parcourir le sous-arbre droit si existe
+            if self.a_droit():
+                result.extend(self.droit.parcours_suffixe())
+            # 3. Visiter la racine (ajouter la valeur du noeud courant)
+            result.append(self.valeur)
+        return result
+
+    ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre suffixe.'''
+    def afficher_suffixe(self):
+        """
+        Affiche les valeurs des noeuds dans l'ordre du parcours suffixe
+        """
+        if not self.est_vide():
+            if self.a_gauche():          # 1. Parcourir le sous-arbre gauche
+                self.gauche.afficher_suffixe()
+            if self.a_droit():           # 2. Parcourir le sous-arbre droit
+                self.droit.afficher_suffixe()
+            print(self.valeur, end=' ')  # 3. Visiter la racine
 
 # ==============================================================================
 
