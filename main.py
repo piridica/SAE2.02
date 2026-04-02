@@ -27,9 +27,29 @@ racine.gauche.set_droite(NoeudBinaire('E'))
 print("Parcours préfixe (liste):", racine.parcours_prefixe())  # ['A', 'B', 'D', 'E', 'C']
 print("Parcours préfixe (affichage):", end=' ')
 racine.afficher_prefixe()  # Affiche: A B D E C
+print()
 
 # Suffixe
 # racine.afficher_suffixe()
+# Création d'un arbre binaire pour suffixe
+racine = NoeudBinaire('A')
+racine.set_gauche(NoeudBinaire('B'))
+racine.set_droite(NoeudBinaire('C'))
+racine.gauche.set_gauche(NoeudBinaire('D'))
+racine.gauche.set_droite(NoeudBinaire('E'))
+# [A[B[D[None,None],E[None,None]],C[None,None]]]
+#         A
+#        / \
+#       B   C
+#      / \
+#     D   E
+
+# Test des méthodes suffixes
+print("Parcours suffixe (liste):", racine.parcours_suffixe())  # ['D', 'E', 'B', 'C', 'A']
+print("Parcours suffixe (affichage):", end=' ')
+racine.afficher_suffixe()  # Affiche: D E B C A
+print()
+
 
 # Infixe
 # racine.afficher_suffixe()
