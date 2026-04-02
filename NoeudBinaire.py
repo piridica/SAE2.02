@@ -1,64 +1,97 @@
 # C5 - Samuel, Thenujan, Victor
 # Fichier NoeudBinaire.py
-from Assets import *
+
 # documentation technique :
 # https://fr.wikipedia.org/wiki/Arbre_binaire
 # Cours sur les graphes R2.07
 # ==============================================================================
+
 class NoeudBinaire() :
-# ------------------------------------------------------------------------------
-    # Définition du constructeur (unique contrairement au JAVA.) != polymorphisme
-    def __init__( self, valeur ) :
-        self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
-        self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
-        self.droite = None      # pareil que le gauche.
+
+# Constructeur -----------------------------------------------------------------
+    
+    def __init__( self, valeur, gauche=None, droite = None ) :
+        self.valeur = valeur
+        self.gauche = None
+        self.droite = None
+    
     
 # Getters / Setters -------------------------------------------------------------
-# valeur
-    def get_valeur( self ) :
+    
+    def get_valeur(self):
         return self.valeur
-    def set_valeur( self, valeur ) :
-        if valeur == None and self.valeur != None :  # vérifie que valeur et self.valeur sont différents
-            if self.gauche != None or self.droite != None :  # vérifie si l'un des sous-arbres n'est pas vide
-                raise ExpectionError("Vous ne pouvez pas supprimer un noeud ayant des sous-noeuds!")
-        else :
-            self.valeur = valeur  # mise à jour du noeud
     
-    # gauche
-    def get_gauche( self ) :
+    def set_valeur(self,valeur):
+        if valeur is None and (self.a_droite() or self.a_gauche()):
+            raise ValueError("Noeud enfant d'une racine qui n'existe pas")
+        else:
+            self.valeur = valeur
+    
+    def get_gauche(self):
         return self.gauche
-    def set_gauche( self, gauche ) :
-        self.gauche = gauche
     
-    # droite
-    def get_droite( self ) :
+    def set_gauche(self,gauche):
+        if self.valeur is None and gauche!=None:
+            raise ValueError("Noeud enfant d'une racine qui n'existe pas")
+        else:
+            self.gauche = gauche
+    
+    def get_droite(self):
         return self.droite
-    def set_droite( self, droite ) :
-        self.droite = droite
     
-    # ------------------------------------------------------------------------------
-    # Fonctions responsables de la vérification de l'état des noeuds, et des sous-noeuds
-    # noeud vide
-    def est_vide( self ) :
+    def set_droite(self,droite):
+        if self.valeur is None and droite!=None:
+            raise ValueError("Noeud enfant d'une racine qui n'existe pas")
+        else:
+            self.droite = droite
+    
+# Méthodes ------------------------------------------------------------------
+    
+    def est_vide(self):
         return self.valeur is None
-    # Vérifie que le noeud n'a ni de fils gauche ni de fils droit.
+        
     def est_feuille(self):
         return self.valeur!=None and self.gauche==None and self.droite==None
-    # Vérification de l'existence d'un fils gauche
+    
     def a_gauche(self):
         return self.gauche!=None
-    # et droit
+    
     def a_droite(self):
         return self.droite!=None
-
+        
     def hauteur(self):
+        haut = 0
         if self.est_vide():
             return 0
         else:
-            return max(gauche.hauteur(),droite.hauteur())
-    # ------------------------------------------------------------------------------
+            haut_g = self.gauche.hauteur() if self.a_gauche() else 0
+            haut_d = self.droite.hauteur() if self.a_droite() else 0
+            return 1 + max(haut_g,haut_d)
+    
+    def __str__(self):
+        return self.__str_aux(0)
+        
+    def __str_aux(self,count):
+            txt = ""
+            #racine
+            txt += str(self.valeur) + "\n"
+            if self.a_gauche() or self.a_droite():
+                #sous-arbre droit
+                if self.a_gauche():
+                    txt += " "*5 * count + "|--> "
+                    txt += self.gauche.__str_aux(count+1)
+                else:
+                    txt += " "*5 * count + "|--> " + "\n"
+                #sous-arbre gauche
+                if self.a_droite():
+                    txt += " "*5 * count + "|--> "
+                    txt += self.droite.__str_aux(count+1)
+                else:
+                    txt += " "*5 * count + "|--> " + "\n"
+            return txt
 
-# ==============================================================================
+    # PARCOURS===============================================================
+    
     """
     Parcours préfixe (préordre) de l'arbre binaire:
     1. Visiter la racine
@@ -91,7 +124,7 @@ class NoeudBinaire() :
             if self.a_droite():          # 3. Parcourir le sous-arbre droit
                 self.droite.afficher_prefixe()
 
-    # ------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------
 
     """Parcours suffixe (postordre) de l'arbre binaire:
     1. Parcourir le sous-arbre gauche
@@ -117,7 +150,7 @@ class NoeudBinaire() :
                 self.droite.afficher_suffixe()
             print(self.valeur, end=' ')  # 3. Visiter la racine
         
-    # ------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------
 
     """
     Parcours infixe (en ordre) de l'arbre binaire :
@@ -144,7 +177,7 @@ class NoeudBinaire() :
             if self.droite :  # 3. Sous-arbre droit
                 self.droite.afficher_infixe()
             
-# ------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     """
     Parcours largeur (niveau par niveau) de l'arbre binaire:
     Visiter la racine
@@ -174,4 +207,4 @@ class NoeudBinaire() :
                     queue.append(current.gauche)  # Enfiler le fils gauche
                 if current.a_droite() :
                     queue.append(current.droite)  # Enfiler le fils droit
-    # ==============================================================================
+    # FIN PARCOURS ==========================================================
