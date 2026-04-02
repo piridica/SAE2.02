@@ -12,7 +12,7 @@ class NoeudBinaire() :
     def __init__( self, valeur ) :
         self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
         self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
-        self.droite = None      # pareil que le gauche.
+        self.droit = None      # pareil que le gauche.
     
     
 # Getters / Setters -------------------------------------------------------------
@@ -45,33 +45,68 @@ class NoeudBinaire() :
         return self.valeur is None
     # Vérifie que le noeud n'a ni de fils gauche ni de fils droit.
     def est_feuille(self):
-        return self.valeur!=None and self.gauche==None and self.droite==None
+        return self.valeur!=None and self.gauche==None and self.droit==None
     # Vérification de l'existence d'un fils gauche
     def a_gauche(self):
         return self.gauche!=None
     # et droit
-    def a_droite(self):
-        return self.droite!=None
+    def a_droit(self):
+        return self.droit!=None
 
     def hauteur(self):
         if self.est_vide():
             return 0
         else:
-            return max(gauche.hauteur(),droite.hauteur())
+            return max(gauche.hauteur(),droit.hauteur())
     # ------------------------------------------------------------------------------
+
+# ==============================================================================
+    """
+    Parcours préfixe (préordre) de l'arbre binaire:
+    1. Visiter la racine
+    2. Parcourir le sous-arbre gauche
+    3. Parcourir le sous-arbre droit
+    @return: Liste des valeurs des noeuds dans l'ordre du parcours préfixe
+    """
+    def parcours_prefixe(self):
+        result = []
+        # 1. Visiter la racine (ajouter la valeur du noeud courant)
+        if not self.est_vide():
+            result.append(self.valeur)
+            # 2. Parcourir le sous-arbre gauche si existe
+            if self.a_gauche():
+                result.extend(self.gauche.parcours_prefixe())
+            # 3. Parcourir le sous-arbre droit si existe
+            if self.a_droit():
+                result.extend(self.droit.parcours_prefixe())
+        return result
+
+    ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre préfixe.'''
+    def afficher_prefixe(self):
+        """
+        Affiche les valeurs des noeuds dans l'ordre du parcours préfixe
+        """
+        if not self.est_vide():
+            print(self.valeur, end=' ')  # 1. Visiter la racine
+            if self.a_gauche():          # 2. Parcourir le sous-arbre gauche
+                self.gauche.afficher_prefixe()
+            if self.a_droit():          # 3. Parcourir le sous-arbre droit
+                self.droit.afficher_prefixe()
+
+# ==============================================================================
+
     '''
     @arguments : poids du fichier initial, puis celui du fichier encodé
     @return : taux de compression en %
     Etat de développement : fini, non testé
     '''
     def taux_compression( mem_txt, mem_txt_encode ) :
-        return ((
-                        mem_txt - mem_txt_encode) / mem_txt) * 100  # à voir s'il vaut mieux conserver le *100 ou pas. les deux se vallent
+        return ((mem_txt - mem_txt_encode) / mem_txt) * 100  # à voir s'il vaut mieux conserver le *100 ou pas. les deux se vallent
     
     '''
     @arguments : chemin d'accès et nom du fichier à peser
     @return : poids du fichier concerné
-    @errors : fichier n'existe pas à cet emplacement
+    @erreurs : fichier n'existe pas à cet emplacement
     Etat de développement : fini, non testé
     '''
     def get_file_size( nom_fichier ) :
@@ -82,7 +117,7 @@ class NoeudBinaire() :
             return size
         else :
             raise FileNotFoundError(f"Le fichier '{nom_fichier}' n'existe pas.")
-    
+    # ------------------------------------------------------------------------------
     
     '''
     @arguments : nom_dossier
@@ -99,6 +134,8 @@ class NoeudBinaire() :
                 taille = os.path.getsize(chemin_complet)
                 print(f"Le fichier : {nom_fichier} pèse {taille} octets")
     
+    # ------------------------------------------------------------------------------
+
     """
     @arguments : directory est un chemin d'accès vers un répertoire.
     Méthode permettant d'afficher une liste des fichiers contenus dans un répértoire.
@@ -111,13 +148,15 @@ class NoeudBinaire() :
         for i, file in enumerate(files, start = 1) :
             print(f"{i} : {file}")
     
+    # ------------------------------------------------------------------------------
+
     '''
     @arguments : chemin d'accès
     @return : poids du répertoire contenant les textes. (devrait fonctionner pour les fichiers encodés mais aussi pour les fichiers initiaux.)
     Chemin d'accès envisagé : input/    et input_compressed/
     Etat de développement : fini, non testé
     '''
-    def get_dir_size( "." ) :
+    def get_dir_size(nom_dossier) :
         total = 0
         with os.scandir(path) as it :
             for entry in it :
@@ -129,6 +168,8 @@ class NoeudBinaire() :
     
     #    print(get_dir_size('/input'))
     #    print(get_dir_size('/input_compressed'))
+    # ------------------------------------------------------------------------------
+
     '''
     @arguments : variable stockant le contenu sous format de chaîne de caractères, depuis un fichier txt
     @return : dico = { 'caractère' : nb_occurences, ... }
@@ -143,6 +184,8 @@ class NoeudBinaire() :
                 dico[ c ] = 1
         return dico
     
+    # ------------------------------------------------------------------------------
+
     '''
     car_distincts()     Approche de Victor, à remplacer éventuellement en faveur de l'approche nb_occurrences() avec une conversion
                         list(dico.keys()). Cette approche (Samuel) permet de conserver le nombre d'ocurrences des caractères.
@@ -155,6 +198,8 @@ class NoeudBinaire() :
         for c in chaine :
             myset.add(c)
         print(f"Nombre de caractères distincts dans la chaîne : ", len(myset))
+        
+        # ------------------------------------------------------------------------------
         
         '''
     choix_dossier() correspond à une boucle imbriquée dans la fonction lire_txt()
@@ -176,6 +221,8 @@ class NoeudBinaire() :
                 print("Veuillez réinsérer une valeur valide.")
                 continuer_bis = True  # la boucle poursuit
     
+    # ------------------------------------------------------------------------------
+
     '''
     lire_txt() s'adapte au contenu brut et compressé.
     @return : contenu du fichier séléctionné
@@ -210,3 +257,5 @@ class NoeudBinaire() :
                 print("Veuillez entrer un nombre valide.")
         
         return content  # renvoie le contenu extrait de l'oeuvre choisie par l'utilisateur.
+
+    # ------------------------------------------------------------------------------
