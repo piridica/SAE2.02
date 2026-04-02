@@ -46,11 +46,11 @@ print("Parcours infixe (affichage):", end=' ')
 racine.afficher_infixe()  # Affiche: D B E A C
 
 # Parcours en largeur
-'''
+
 print("\n\nParcours en largeur (liste):", racine.parcours_largeur())  # ['A', 'B', 'C', 'D', 'E']
 print("Parcours en largeur (affichage):", end=' ')
-# racine.afficher_largeur()  # Affiche: A B C D E
-'''
+racine.afficher_largeur()  # Affiche: A B C D E
+
 # ------------------------------------------------------------------------------
 
 

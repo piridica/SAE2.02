@@ -6,14 +6,12 @@ from Assets import *
 # Cours sur les graphes R2.07
 # ==============================================================================
 class NoeudBinaire() :
-
 # ------------------------------------------------------------------------------
     # Définition du constructeur (unique contrairement au JAVA.) != polymorphisme
     def __init__( self, valeur ) :
         self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
         self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
         self.droite = None      # pareil que le gauche.
-    
     
 # Getters / Setters -------------------------------------------------------------
 # valeur
@@ -93,6 +91,8 @@ class NoeudBinaire() :
             if self.a_droite():          # 3. Parcourir le sous-arbre droit
                 self.droite.afficher_prefixe()
 
+    # ------------------------------------------------------------------------------
+
     """Parcours suffixe (postordre) de l'arbre binaire:
     1. Parcourir le sous-arbre gauche
     2. Parcourir le sous-arbre droite
@@ -108,17 +108,16 @@ class NoeudBinaire() :
             result.append(self.valeur)      # 3. Visiter la racine (ajouter la valeur du noeud courant)
         return result
 
-    ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre suffixe.'''
+    ''' Méthode permettant d'afficher l'ordre de parcours suffixe.'''
     def afficher_suffixe(self):
-        """
-        Affiche les valeurs des noeuds dans l'ordre du parcours suffixe
-        """
         if not self.est_vide():
             if self.a_gauche():          # 1. Parcourir le sous-arbre gauche
                 self.gauche.afficher_suffixe()
             if self.a_droite():           # 2. Parcourir le sous-arbre droit
                 self.droite.afficher_suffixe()
             print(self.valeur, end=' ')  # 3. Visiter la racine
+        
+    # ------------------------------------------------------------------------------
 
     """
     Parcours infixe (en ordre) de l'arbre binaire :
@@ -139,10 +138,40 @@ class NoeudBinaire() :
 
     """Affiche les valeurs des nœuds dans l'ordre du parcours infixe"""
     def afficher_infixe( self ) :
-
             if self.gauche :  # 1. Sous-arbre gauche
                 self.gauche.afficher_infixe()
             print(self.valeur, end = ' ')  # 2. Racine
             if self.droite :  # 3. Sous-arbre droit
                 self.droite.afficher_infixe()
+            
+# ------------------------------------------------------------------------------
+    """
+    Parcours largeur (niveau par niveau) de l'arbre binaire:
+    Visiter la racine
+    Parcourir les noeuds du niveau suivant@return: Liste des valeurs des noeuds dans l'ordre du parcours largeur
+    """
+    def parcours_largeur( self ) :
+        result = [ ]
+        if not self.est_vide() :
+            queue = [ self ]  # Utilisation d'une file pour le parcours en largeur
+            while queue :
+                current = queue.pop(0)  # Défilement du noeud courant
+                result.append(current.valeur)  # Visiter le noeud courant
+                if current.a_gauche() :
+                    queue.append(current.gauche)  # Enfiler le fils gauche
+                if current.a_droite() :
+                    queue.append(current.droite)  # Enfiler le fils droit
+        return result
+    
+    """Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre largeur."""
+    def afficher_largeur( self ) :
+        if not self.est_vide() :
+            queue = [ self ]  # Utilisation d'une file pour le parcours en largeur
+            while queue :
+                current = queue.pop(0)  # Défilement du noeud courant
+                print(current.valeur, end = ' ')  # Visiter le noeud courant
+                if current.a_gauche() :
+                    queue.append(current.gauche)  # Enfiler le fils gauche
+                if current.a_droite() :
+                    queue.append(current.droite)  # Enfiler le fils droit
     # ==============================================================================
