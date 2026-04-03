@@ -1,62 +1,99 @@
 # C5 - Samuel, Thenujan, Victor
 # Fichier NoeudBinaire.py
-# from Assets import *
-# documentation technique :
+
+# Documentation technique :
 # https://fr.wikipedia.org/wiki/Arbre_binaire
 # Cours sur les graphes R2.07
+
 # ==============================================================================
+# === CLASSE NOEUDBINAIRE ======================================================
+# ==============================================================================
+
 class NoeudBinaire() :
-# ------------------------------------------------------------------------------
-    # Définition du constructeur (unique contrairement au JAVA.) != polymorphisme
+
     def __init__( self, valeur, gauche = None, droite = None) :
-        self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
-        self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
-        self.droite = None      # pareil que le gauche.
+        self.valeur = valeur
+        self.gauche = gauche
+        self.droite = droite
     
-# Getters / Setters -------------------------------------------------------------
-# valeur
+    # --- GETTERS, SETTERS ---------------------------------------------
+
     def get_valeur( self ) :
+        """
+        Renvoie la valeur de la racine de l'arbre
+        """
         return self.valeur
+        
     def set_valeur(self,valeur):
+        """
+        Modifie la valeur de la racine de l'arbre
+        """
         if valeur is None and (self.a_droite() or self.a_gauche()): # racine inexistante ayant au moins une feuille
             raise ValueError("Noeud enfant d'une racine qui n'existe pas")
         else:
             self.valeur = valeur    # mise à jour du noeud
         
-    # gauche
-    def get_gauche( self ) :
+    def get_gauche( self ):
+        """
+        Renvoie le sous-arbre gauche
+        """
         return self.gauche
+        
     def set_gauche(self,gauche):
+        """
+        Modifie le sous-arbre gauche
+        Raises:
+            ValueError: si la racine est vide et le noeud non vide
+        """
         if self.valeur is None and gauche!=None:
             raise ValueError("Noeud enfant d'une racine qui n'existe pas")
         else:
             self.gauche = gauche
     
-    # droite
     def get_droite( self ) :
         return self.droite
+        
     def set_droite(self,droite):
+        """
+        Modifie le sous-arbre droit
+        Raises:
+            ValueError: si la racine est vide et le noeud non vide
+        """
         if self.valeur is None and droite!=None:
             raise ValueError("Noeud enfant d'une racine qui n'existe pas")
         else:
             self.droite = droite
     
-    # ------------------------------------------------------------------------------
-    # Fonctions responsables de la vérification de l'état des noeuds, et des sous-noeuds
-    # noeud vide
+    # --- METHODES -----------------------------------------------------
+    
     def est_vide( self ) :
+        """
+        Vérifie si l'arbre est vide (il suffit de vérifier que la racine est vide car alors il n'y a pas de sous-arbres)
+        """
         return self.valeur is None
-    # Vérifie que le noeud n'a ni de fils gauche ni de fils droit.
+        
     def est_feuille(self):
+        """
+        Vérifie que l'arbre est une racine sans sous-arbre gauche ou droit, c'est à dire une feuille
+        """
         return self.valeur!=None and self.gauche==None and self.droite==None
-    # Vérification de l'existence d'un fils gauche
+        
     def a_gauche(self):
+        """
+        Vérifie que l'arbre possède un sous-arbre gauche (non vide)
+        """
         return self.gauche!=None
-    # et droit
+
     def a_droite(self):
+        """
+        Vérifie que l'arbre possède un sous-arbre droite (non vide)
+        """
         return self.droite!=None
 
     def hauteur(self):
+        """
+        Calcule la hauteur de l'arbre par rapport à ses noeuds
+        """
         if self.est_vide():
             return 0
         else:
@@ -66,10 +103,16 @@ class NoeudBinaire() :
     
     
     def __str__( self ) :
+        """
+        Affiche l'arbre sous forme horizontale en faisant appel à une fonction récursive auxiliaire
+        """
         return self.__str_aux(0)
     
     
     def __str_aux( self, count ) :
+        """
+        Affiche l'arbre sous forme horizontale récursivement jusqu'à afficher l'arbre du premier appel en entier
+        """
         txt = ""
         # racine
         txt += str(self.valeur) + "\n"
@@ -88,101 +131,63 @@ class NoeudBinaire() :
                 txt += " " * 5 * count + "|--> " + "\n"
         return txt
         
-    # ------------------------------------------------------------------------------
-
-# ==============================================================================
-    """
-    Parcours préfixe (préordre) de l'arbre binaire:
-    1. Visiter la racine
-    2. Parcourir le sous-arbre gauche
-    3. Parcourir le sous-arbre droit
-    @return: Liste des valeurs des noeuds dans l'ordre du parcours préfixe
-    """
+    # --- METHODES: PARCOURS -------------------------------------------
+    
     def parcours_prefixe(self):
+        """
+        Parcours préfixe (préordre) de l'arbre binaire:
+        1. Visiter la racine
+        2. Parcourir le sous-arbre gauche
+        3. Parcourir le sous-arbre droit
+        @return: Liste des valeurs des noeuds dans l'ordre du parcours préfixe
+        """
         result = []
-        # 1. Visiter la racine (ajouter la valeur du noeud courant)
         if not self.est_vide():
             result.append(self.valeur)
-            # 2. Parcourir le sous-arbre gauche si existe
             if self.a_gauche():
                 result.extend(self.gauche.parcours_prefixe())
-            # 3. Parcourir le sous-arbre droit si existe
             if self.a_droite():
                 result.extend(self.droite.parcours_prefixe())
         return result
 
-    ''' Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre préfixe.'''
-    def afficher_prefixe(self):
-        """
-        Affiche les valeurs des noeuds dans l'ordre du parcours préfixe
-        """
-        if not self.est_vide():
-            print(self.valeur, end=' ')  # 1. Visiter la racine
-            if self.a_gauche():          # 2. Parcourir le sous-arbre gauche
-                self.gauche.afficher_prefixe()
-            if self.a_droite():          # 3. Parcourir le sous-arbre droit
-                self.droite.afficher_prefixe()
-
-    # ------------------------------------------------------------------------------
-
-    """Parcours suffixe (postordre) de l'arbre binaire:
-    1. Parcourir le sous-arbre gauche
-    2. Parcourir le sous-arbre droite
-    3. Visiter la racine
-    @return: Liste des valeurs des noeuds dans l'ordre du parcours suffixe"""
-    def parcours_suffixe(self):     # Visiter les noeuds d'un arbre binaire en suffixe (postfixe)
+    def parcours_suffixe(self):
+        """Parcours suffixe (postordre) de l'arbre binaire:
+        1. Parcourir le sous-arbre gauche
+        2. Parcourir le sous-arbre droite
+        3. Visiter la racine
+        @return: Liste des valeurs des noeuds dans l'ordre du parcours suffixe"""
         result = []
-        if not self.est_vide():             # 1. Parcourir le sous-arbre gauche si existe
+        if not self.est_vide():
             if self.a_gauche():
                 result.extend(self.gauche.parcours_suffixe())
-            if self.a_droite():              # 2. Parcourir le sous-arbre droit si existe
+            if self.a_droite():
                 result.extend(self.droite.parcours_suffixe())
-            result.append(self.valeur)      # 3. Visiter la racine (ajouter la valeur du noeud courant)
+            result.append(self.valeur)
         return result
 
-    ''' Méthode permettant d'afficher l'ordre de parcours suffixe.'''
-    def afficher_suffixe(self):
-        if not self.est_vide():
-            if self.a_gauche():          # 1. Parcourir le sous-arbre gauche
-                self.gauche.afficher_suffixe()
-            if self.a_droite():          # 2. Parcourir le sous-arbre droit
-                self.droite.afficher_suffixe()
-            print(self.valeur, end=' ')  # 3. Visiter la racine
-        
-    # ------------------------------------------------------------------------------
-
-    """
-    Parcours infixe (en ordre) de l'arbre binaire :
-    1. Sous-arbre gauche
-    2. Racine
-    3. Sous-arbre droit
-    @return: Liste des valeurs des nœuds dans l'ordre du parcours infixe
-    """
     def parcours_infixe( self ) :
+        """
+        Parcours infixe (en ordre) de l'arbre binaire :
+        1. Sous-arbre gauche
+        2. Racine
+        3. Sous-arbre droit
+        @return: Liste des valeurs des nœuds dans l'ordre du parcours infixe
+        """
         result = [ ]
-        if self.gauche :  # 1. Parcourir le sous-arbre gauche
+        if self.gauche :
             result += self.gauche.parcours_infixe()
-        result.append(self.valeur)  # 2. Visiter la racine
-        if self.droite :  # 3. Parcourir le sous-arbre droit
+        result.append(self.valeur)
+        if self.droite :
             result += self.droite.parcours_infixe()
         return result
 
-
-    """Affiche les valeurs des nœuds dans l'ordre du parcours infixe"""
-    def afficher_infixe( self ) :
-            if self.gauche :  # 1. Sous-arbre gauche
-                self.gauche.afficher_infixe()
-            print(self.valeur, end = ' ')  # 2. Racine
-            if self.droite :  # 3. Sous-arbre droit
-                self.droite.afficher_infixe()
-            
-# ------------------------------------------------------------------------------
-    """
-    Parcours largeur (niveau par niveau) de l'arbre binaire:
-    Visiter la racine
-    Parcourir les noeuds du niveau suivant@return: Liste des valeurs des noeuds dans l'ordre du parcours largeur
-    """
     def parcours_largeur( self ) :
+        """
+        Parcours largeur (niveau par niveau) de l'arbre binaire:
+        1. Visiter la racine
+        2. Parcourir les noeuds du niveau suivant
+        @return: Liste des valeurs des noeuds dans l'ordre du parcours largeur
+        """
         result = [ ]
         if not self.est_vide() :
             queue = [ self ]  # Utilisation d'une file pour le parcours en largeur
@@ -194,16 +199,4 @@ class NoeudBinaire() :
                 if current.a_droite() :
                     queue.append(current.droite)  # Enfiler le fils droit
         return result
-    
-    """Méthode permettant d'afficher l'ordre de parcours de l'arbre en ordre largeur."""
-    def afficher_largeur( self ) :
-        if not self.est_vide() :
-            queue = [ self ]  # Utilisation d'une file pour le parcours en largeur
-            while queue :
-                current = queue.pop(0)  # Défilement du noeud courant
-                print(current.valeur, end = ' ')  # Visiter le noeud courant
-                if current.a_gauche() :
-                    queue.append(current.gauche)  # Enfiler le fils gauche
-                if current.a_droite() :
-                    queue.append(current.droite)  # Enfiler le fils droit
-    # ==============================================================================
+
