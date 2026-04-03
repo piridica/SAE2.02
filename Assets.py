@@ -6,7 +6,6 @@ Etat de développement : fini, non testé
 def taux_compression( mem_txt, mem_txt_encode ) :
     return (( mem_txt - mem_txt_encode) / mem_txt ) * 100  # à voir s'il vaut mieux conserver le *100 ou pas. les deux se vallent
 
-
 '''
 @arguments : chemin d'accès et nom du fichier à peser
 @return : poids du fichier concerné
