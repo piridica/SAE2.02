@@ -245,9 +245,46 @@ def test_set_droite():
 # === TESTS: NOEUDHUFFMAN ======================================================
 # ==============================================================================
 
+def test_arbre_huffman(chaine):
+    '''
+    Teste la construction de l'arbre d'Huffman et l'affiche
+    '''
+    arbre = NoeudHuffman.construire_huffman(chaine)
+    print("\nArbre de Huffman :")
+    print(arbre)
+    return arbre
 
+def test_encodage(arbre):
+    '''
+    Teste l'encodage pour les caractères à partir de l'arbre d'Huffman associé
+    '''
+    codes = arbre.encodage()
+    print("\nEncodage des caractères :")
+    for caractere, code in sorted(codes.items(), key=lambda x: x[1]):
+        print(f"  '{caractere}' -> {code}")
+    return codes
 
+# Compression
+def test_compression(chaine,arbre,codes):
+    compresse = arbre.compresser(chaine, codes)
+    taille_initiale = len(chaine) * 8
+    taille_compressee = len(compresse)
+    print(f"\nChaîne originale    : {chaine}")
+    print(f"Chaîne compressée   : {compresse}")
+    print(f"Taille initiale     : {taille_initiale} bits")
+    print(f"Taille compressée   : {taille_compressee} bits")
+    print(f"Taux de compression : {round((1 - taille_compressee / taille_initiale) * 100, 2)}%")
+    return compresse
 
+def test_decompression(chaine,arbre,compresse):
+    decompresse = arbre.decompresser(compresse)
+    print(f"\nChaîne décompressée : {decompresse}")
+    if decompresse == chaine:
+        print("Décompression correspond à l'original.")
+    else:
+        print("ERREUR - la décompression ne correspond pas à l'original.")
+    print("\n")
+    return decompresse
 
 # ==============================================================================
 # === MAIN =====================================================================
@@ -258,7 +295,9 @@ def test_noeudbinaire():
   Teste la classe NoeudBinaire
   '''
   print("\n")
-  print("Tests NoeudBinaire ... \n")
+  print("="*26)
+  print("=== TESTS NOEUDBINAIRE " + "="*3)
+  print("="*26 + "\n")
   # METHODES
   test_est_vide()
   test_est_feuille()
@@ -277,16 +316,23 @@ def test_noeudbinaire():
   test_set_gauche()
   test_get_droite()
   test_set_droite()
-  print("OK")
+  print("\nOK")
 
 def test_noeudhuffman():
-  #print("Tests NoeudHuffman ...")
-  
-  #print("OK")
+  print("\n")
+  print("="*26)
+  print("=== TESTS NOEUDHUFFMAN " + "="*3)
+  print("="*26 + "\n")
+  chaine = "bonjourbonsoir"
+  arbre = test_arbre_huffman(chaine)
+  codes = test_encodage(arbre)
+  compresse = test_compression(chaine,arbre,codes)
+  test_decompression(chaine,arbre,compresse)
+  print("OK")
 
 # ==============================================================================
 
 if __name__ == "__main__":
   test_noeudbinaire()
-  #test_noeudhuffman()
+  test_noeudhuffman()
 
