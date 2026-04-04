@@ -10,8 +10,8 @@ class NoeudBinaire() :
     # Définition du constructeur (unique contrairement au JAVA.) != polymorphisme
     def __init__( self, valeur, gauche = None, droite = None) :
         self.valeur = valeur    # Noeud qui est représenté en pratique par un tuple (str "chaine de caractères", int nombre_occurrences)
-        self.gauche = None      # attribut de classe NoeudBinaire qui peut devenir une instance
-        self.droite = None      # pareil que le gauche.
+        self.gauche = gauche      # attribut de classe NoeudBinaire qui peut devenir une instance
+        self.droite = droite      # pareil que le gauche.
     
 # Getters / Setters -------------------------------------------------------------
 # valeur
