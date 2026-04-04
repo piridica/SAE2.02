@@ -58,6 +58,7 @@ racine.afficher_largeur()  # Affiche: A B C D E
 
 
 # ==============================================================================
+print("\n" + "="*60)
 #Tests pour le fichier NoeudHuffman
 
 #Proposition de chaine de caractere a essaye pour le test
