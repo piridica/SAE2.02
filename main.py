@@ -27,6 +27,9 @@ racine.gauche.set_droite(NoeudBinaire('E'))
 
 # ------------------------------------------------------------------------------
 
+print("\n" + "="*60)
+print("Tests NoeudBinaire :")
+print("="*60)
 # Test des méthodes
 print("Tests :")
 # Préfixe - Validé
@@ -54,3 +57,42 @@ racine.afficher_largeur()  # Affiche: A B C D E
 # ------------------------------------------------------------------------------
 
 
+# ==============================================================================
+#Tests pour le fichier NoeudHuffman
+
+#Proposition de chaine de caractere a essaye pour le test
+chaine = "Comment ca va ?"
+
+#Affichage de la separation
+print("\n" + "="*60)
+print("Tests NoeudHuffman sur la chaîne :", chaine)
+print("="*60)
+
+# Construction de l'arbre
+arbre = NoeudHuffman.depuis_chaine(chaine)
+print("\nArbre de Huffman :")
+print(arbre)
+
+# Encodage
+codes = arbre.encodage()
+print("\nEncodage des caractères :")
+for caractere, code in sorted(codes.items(), key=lambda x: x[1]):
+    print(f"  '{caractere}' -> {code}")
+
+# Compression
+compresse = arbre.compresser(chaine, codes)
+taille_initiale = len(chaine) * 8
+taille_compressee = len(compresse)
+print(f"\nChaîne originale    : {chaine}")
+print(f"Chaîne compressée   : {compresse}")
+print(f"Taille initiale     : {taille_initiale} bits")
+print(f"Taille compressée   : {taille_compressee} bits")
+print(f"Taux de compression : {round((1 - taille_compressee / taille_initiale) * 100, 2)}%")
+
+# Decompression
+decompresse = arbre.decompresser(compresse)
+print(f"\nChaîne décompressée : {decompresse}")
+if decompresse == chaine:
+    print("Décompression correspond à l'original.")
+else:
+    print("ERREUR - la décompression ne correspond pas à l'original.")
