@@ -1,3 +1,5 @@
+import os
+
 '''
 @arguments : poids du fichier initial, puis celui du fichier encodé
 @return : taux de compression en %
@@ -10,7 +12,7 @@ def taux_compression( mem_txt, mem_txt_encode ) :
 @arguments : chemin d'accès et nom du fichier à peser
 @return : poids du fichier concerné
 @erreurs : fichier n'existe pas à cet emplacement
-Etat de développement : fini, non testé
+Etat de développement : fini, testée, fonctionne
 '''
 def get_file_size( nom_fichier ) :
     # Vérifie si le fichier existe pour éviter les erreurs
@@ -27,7 +29,7 @@ def get_file_size( nom_fichier ) :
 '''
 @arguments : nom_dossier
 Méthode permettant d'afficher dans la console le poids de fichiers stockés dans un certain répertoire
-Etat de développement : fini, non testé
+Etat de développement : fini, testée, fonctionne
 '''
 def affiche_size( nom_dossier ) :
     # Liste tous les éléments du dossier
@@ -42,9 +44,11 @@ def affiche_size( nom_dossier ) :
 
 # ------------------------------------------------------------------------------
 
+# NE FONCTIONNE PAS CORRECTEMENT
 """
 @arguments : directory est un chemin d'accès vers un répertoire.
 Méthode permettant d'afficher une liste des fichiers contenus dans un répértoire.
+Etat de développement : fini, testée, fonctionne
 """
 def affiche_fichiers( directory ) :
     # Liste seulement les fichiers en excluant les sous-répertoires
@@ -60,16 +64,16 @@ def affiche_fichiers( directory ) :
 @arguments : chemin d'accès
 @return : poids du répertoire contenant les textes. (devrait fonctionner pour les fichiers encodés mais aussi pour les fichiers initiaux.)
 Chemin d'accès envisagé : input/    et input_compressed/
-Etat de développement : fini, non testé
+Etat de développement : fini, testé, fonctionne
 '''
 def get_dir_size( nom_dossier ) :
     total = 0
-    with os.scandir(path) as it :
+    with os.scandir(nom_dossier) as it :
         for entry in it :
             if entry.is_file() :
                 total += entry.stat().st_size
             elif entry.is_dir() :
-                total += get_dir_size(entry.path)
+                total += get_dir_size(entry.nom_dossier)
     return total
 
 
@@ -80,9 +84,9 @@ def get_dir_size( nom_dossier ) :
 '''
 @arguments : variable stockant le contenu sous format de chaîne de caractères, depuis un fichier txt
 @return : dico = { 'caractère' : nb_occurences, ... }
-Etat de développement : fini, non testé
+Etat de développement : fini, testée, fonctionne
 '''
-def nb_ocurrences( txt ) :
+def nb_occurrences( txt ) :
     dico = {}
     for c in txt :
         if c in dico :
@@ -96,15 +100,16 @@ def nb_ocurrences( txt ) :
 
 '''
 car_distincts()     Approche de Victor, à remplacer éventuellement en faveur de l'approche nb_occurrences() avec une conversion
-                    list(dico.keys()). Cette approche (Samuel) permet de conserver le nombre d'ocurrences des caractères.
+                    list(dico.keys()). Cette approche (Samuel) permet de conserver le nombre d'occurrences des caractères.
 @arguments : chaine renvoyée par lire_txt()
 @return : chaine_car_distincts
-Etat de développement : fini, non testé
+Etat de développement : fini, testée, fonctionne
 '''
 def car_distincts( chaine ) :
-    myset = {}
+    myset = set()
     for c in chaine :
         myset.add(c)
+    print(myset)
     print(f"Nombre de caractères distincts dans la chaîne : ", len(myset))
     
     # ------------------------------------------------------------------------------
@@ -112,30 +117,30 @@ def car_distincts( chaine ) :
     '''
 choix_dossier() correspond à une boucle imbriquée dans la fonction lire_txt()
 @return directory qui correspond au chemin d'accès du dossier contenant les oeuvres au format ASCII, brut, et encodées.
-Etat de développement : fini, non testé
+Etat de développement : fini, testé à l'intérieur de lire_txt(), fonctionne
 '''
 def choix_dossier() :
+    continuer_bis = True
     while continuer_bis :  # boucle responsable du choix du dossier : compressé ou brut
         choix_dossier = input("Souhaitez vous lire : \n1 : les fichiers compressés \n 2 : les fichiers bruts?")
-        if choix_dossier == 1 :  # fichiers bruts
-            directory = "/input"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers bruts
+        if choix_dossier == "1" :  # fichiers bruts
+            directory = "input"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers bruts
             continuer_bis = False  # la boucle s'interrompt
             return directory
-        elif choix_dossier == 2 :  # fichiers compressés
-            directory = "/input_compressed"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers compressés
+        elif choix_dossier == "2" :  # fichiers compressés
+            directory = "input_compressed"  # affectation du chemin d'accès menant vers le répertoire contenant les fichiers compressés
             continuer_bis = False  # la boucle s'interrompt
             return directory
         else :
             print("Veuillez réinsérer une valeur valide.")
             continuer_bis = True  # la boucle poursuit
 
-
 # ------------------------------------------------------------------------------
 
 '''
 lire_txt() s'adapte au contenu brut et compressé.
 @return : contenu du fichier séléctionné
-Etat de développement : fini, non testé
+Etat de développement : fini, testée, fonctionne
 '''
 def lire_txt() :
     content = ""  # Déclaration/Initialisation du contenu extrait du fichier.txt, initialement vide. (str)
@@ -145,26 +150,23 @@ def lire_txt() :
     
     while continuer :
         directory = choix_dossier()  # appel de la fonction permettant de choisir entre dossier brut et dossier encodé
-        affiche_fichiers(
-            directory)  # appel de procédure permettant d'afficher l'ensemble des fichiers du dossier séléctionné
-        
+        files = os.listdir(directory)  # Récupération de la liste des fichiers dans le dossier
+        affiche_fichiers(directory)  # appel de procédure permettant d'afficher l'ensemble des fichiers du dossier séléctionné
         choix = input("Votre choix : ")
+
         try :
             choix_int = int(choix) - 1  # Convertir en index (0-based)
-            if 0 <= choix_int < len(
-                    files) :  # Vérification que l'utiulisateur n'a pas inséré une valeur supérieure au nombre de fichiers
+            if 0 <= choix_int < len(files) :  # Vérification que l'utiulisateur n'a pas inséré une valeur supérieure au nombre de fichiers
                 print(f"Vous avez choisi {files[ choix_int ]}")  # Affichage du fichier séléctionné dans la console
-                with open(os.path.join(directory, files[ choix_int ]),
-                          'r') as f :  # ouvre le fichier en mode lecture
+                with open(os.path.join(directory, files[ choix_int ]),'r') as f :  # ouvre le fichier en mode lecture
                     content = f.read()  # affecte le contenu du fichier à la variable content. format str
                 continuer = False  # interruption de la boucle principale
             
             else :  # le choix de l'utilisateur n'est pas valide, cas de marge
                 print("Votre choix est en dehors de la plage valide. Veuillez réessayer.")
-        
         except ValueError :  # l'input de l'utilisateur est impossible à interpréter
             print("Veuillez entrer un nombre valide.")
-    
+            
     return content  # renvoie le contenu extrait de l'oeuvre choisie par l'utilisateur.
 
 # ------------------------------------------------------------------------------
