@@ -1,15 +1,9 @@
 # C5 - Samuel, Thenujan, Victor
-# Fichier tests.py
+# Fichier test.py
 
-# importation des 3 modules authorisés dans le cadre de cette SAE2.02
-from os import *
-from sys import *
-from unidecode import *
-
-# importation des classes
+# Imports de classes
 from NoeudBinaire import *
 from NoeudHuffman import *
-from Assets import *
 
 # ==============================================================================
 # === TESTS: NOEUDBINAIRE ======================================================
@@ -264,7 +258,7 @@ def test_encodage( arbre ) :
         print(f"  '{caractere}' -> {code}")
     return codes
 
-# Compression
+
 def test_compression( chaine, arbre, codes ) :
     compresse = arbre.compresser(chaine, codes)
     taille_initiale = len(chaine) * 8
@@ -287,7 +281,7 @@ def test_decompression( chaine, arbre, compresse ) :
     return decompresse
 
 # ==============================================================================
-# === MAIN =====================================================================
+# === EXECUTION ================================================================
 # ==============================================================================
 
 def test_noeudbinaire() :
@@ -331,22 +325,10 @@ def test_noeudhuffman() :
     test_decompression(chaine, arbre, compresse)
     print("OK")
 
-
-def afficher_taille_input() :
-    return None
-
-
 # ==============================================================================
 
-# test_noeudbinaire()
-# test_noeudhuffman()
-# car_distincts("input/marcheTrain.txt")  # test validé
+if __name__ == "__main__":
+    test_noeudbinaire()
+    test_noeudhuffman()
 
-# get_file_size("input/marcheTrain.txt")  # fonctionne
-# print(get_dir_size("input"))     # fonctionne
-# affiche_fichiers("input")  # fonctionne
-# var = lire_txt()  # fonctionne
-# print(car_distincts(var)) # fonctionne
-# print(nb_occurrences(var))# fonctionne
-# affiche_size("input")     # fonctionne
-# taux_compression(get_file_size("input_compressed/marcheTrain.txt"),get_file_size("input/marcheTrain.txt"))  # input_compressed not exists
+
