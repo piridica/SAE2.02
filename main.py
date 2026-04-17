@@ -2,12 +2,12 @@
 # Fichier main.py
 
 # importation des 3 modules authorisés dans le cadre de cette SAE2.02
-from os import *
-from sys import *
+import os
+import sys
 #from unidecode import *     Utilisé sur assets.py
 
 # importation des classes et des fichiers supplémentaires
-from Assets import *
+from assets import *
 #from NoeudBinaire import *  Utilisé sur assets.py
 #from NoeudHuffman import *  Utilisé sur assets.py
 #from tests import *         Ficher tests.py à exécuter seul
