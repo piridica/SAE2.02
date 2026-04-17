@@ -71,7 +71,7 @@ def compression(files,liste,input_dir) :
             if len(liste)==0:
                 print(f"Fichier n°{files.index(f)} ./{input_dir}/{f} chargé.")
             else:
-                print(f"Fichier n°{os.listdir(input_dir).index(f)-1} ./{input_dir}/{f} chargé.")
+                print(f"Fichier n°{os.listdir(input_dir).index(f)} ./{input_dir}/{f} chargé.")
             texte = unidecode(file.read())
             arbre = NoeudHuffman.construire_huffman(texte)
             codes = arbre.encodage()
