@@ -4,45 +4,57 @@
 # importation des 3 modules authorisés dans le cadre de cette SAE2.02
 from os import *
 from sys import *
-from unidecode import *
+#from unidecode import *     Utilisé sur assets.py
 
 # importation des classes et des fichiers supplémentaires
-from NoeudBinaire import * 
-from NoeudHuffman import *
 from Assets import *
-from tests import *
+#from NoeudBinaire import *  Utilisé sur assets.py
+#from NoeudHuffman import *  Utilisé sur assets.py
+#from tests import *         Ficher tests.py à exécuter seul
 
 # ==============================================================================
 
 if __name__ == "__main__":
-
+    
     print("\n")
-    print("="*42)
-    print("=== COMPRESSION DE TEXTE SELON HUFFMAN " + "="*3)
-    print("="*42 + "\n")
+    print("="*40)
+    print("=== COMPRESSION DE TEXTE PAR HUFFMAN " + "="*3)
+    print("="*40 + "\n")
 
-    # Enregistrement de l'entrée en cli (dossier cible)
+    # ENTREE A L'EXECUTION: NOM DE DOSSIER CONTENANT DES FICHIERS TEXTE
     try:
         input_dir = sys.argv[1]
+        # On ne prend en compte que les fichiers texte
+        files = [file for file in os.listdir(input_dir) if file.endswith('.txt')]
     except IndexError:
         raise IndexError("Il manque un paramètre: veuillez entrer le nom du fichier cible.")
-    if len(os.listdir(input_dir))==0:
-        raise FileNotFoundError("Il n'y a pas de fichiers dans ce dossier.")
+    if len(files)==0:
+        raise FileNotFoundError("Il n'y a pas de fichiers texte dans ce dossier.")
     
-    # Sélection de fichiers pour la compression
+    # SELECTION DE FICHIERS POUR LA COMPRESSION
     print("Veuillez choisir le(s) texte(s) à compresser:\n")
-    affiche_fichiers(input_dir)
+    
+    affiche_fichiers(files)
+    
     print("\n-- entrez l'un des nombres")
     print("ou")
     print("-- entrez une plage (ex: (1,10))")
     print("ou")
     print("-- entrez une liste (ex: [1,5,6,10])")
     print("ou")
-    print("-- sélectionnez tout par défaut\n")
-    choix_str = input(":").strip()
-    choix = listage(choix_str)
+    print("-- sélectionnez tout par défaut")
+    print("ou")
+    print("-- entrez i pour accéder aux données de compression des fichiers compressés\n")
     
-    # Lecture des fichiers
-    fichiers = 
-    textes = lire_txt(fichier,liste)
+    choix_str = input(":").strip()
+    
+    if choix_str == "i":
+        # DONNEES COMPRESSION
+        print("\n")
+        afficher_csv("stats.csv")
+    else:
+        # COMPRESSION
+        print("\n")
+        choix = listage(choix_str)
+        compresse = compression(files,choix,input_dir)
 
