@@ -18,8 +18,8 @@ projet-huffman/
 ├── test.py              # Tests unitaires et visuels
 │
 ├── <stats.csv>          # Généré automatiquement — statistiques de compression
-├── <dossier_entree>/    # Dossier contenant les fichiers .txt à compresser
-└── <dossier_sortie>/    # Dossier de sortie (défaut: output/ ou decompresse/)
+├── <dossier_entree>/    # Dossier contenant les fichiers à traiter
+└── <dossier_sortie>/    # Dossier contenant les fichiers traités
 ```
 
 ---
@@ -47,7 +47,9 @@ Si le dossier de destination n'est pas spécifié :
 - `-c` écrit dans `compresse/`
 - `-d` écrit dans `decompresse/`
 
-### Sélection des fichiers
+---
+
+## Sélection des fichiers
 
 Au lancement avec `-c`, le programme affiche la liste des fichiers `.txt` disponibles :
 
