@@ -18,7 +18,8 @@ projet-huffman/
 ├── test.py              # Tests unitaires et visuels
 │
 ├── <stats.csv>          # Généré automatiquement — statistiques de compression
-└── <dossier_input>/     # Dossier contenant les fichiers .txt à compresser
+├── <dossier_source>/    # Dossier contenant les fichiers .txt à compresser
+└── <dossier_sortie>/    # Dossier de sortie (défaut: output/ ou decompresse/)
 ```
 
 ---
@@ -34,19 +35,17 @@ pip install unidecode
 ## Utilisation
 
 ```bash
-python main.py <paramètre> <nom_dossier_entree> [nom_dossier_destination]
+python main.py <parametre> <dossier_entree> [dossier_sortie]
 ```
 
-Paramètres:
--i:  affichage des informations de compression enregistrés dans stats.csv
--c:  compression de fichiers .txt en fichiers .huff
--d:  décompression de fichiers .huff en fichiers .txt
+Paramètres :
+- `-i` : affichage des informations de compression enregistrées dans `stats.csv`
+- `-c` : compression de fichiers `.txt` en fichiers `.huff`
+- `-d` : décompression de fichiers `.huff` en fichiers `.txt`
 
-**Exemple :**
-
-```bash
-python main.py -c input
-```
+Si le dossier de destination n'est pas spécifié :
+- `-c` écrit dans `output/`
+- `-d` écrit dans `decompresse/`
 
 ### Sélection des fichiers
 
