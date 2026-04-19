@@ -17,7 +17,7 @@ projet-huffman/
 ├── assets.py            # Fonctions utilitaires (compression, CSV)
 ├── test.py              # Tests unitaires et visuels
 │
-├── stats.csv            # Généré automatiquement — statistiques de compression
+├── <stats.csv>          # Généré automatiquement — statistiques de compression
 └── <dossier_input>/     # Dossier contenant les fichiers .txt à compresser
 ```
 
@@ -33,15 +33,13 @@ pip install unidecode
 
 ## Utilisation
 
-Lancer le programme en passant le **nom du dossier** contenant les fichiers `.txt` en argument :
-
 ```bash
 python main.py <paramètre> <nom_dossier_entree> [nom_dossier_destination]
 ```
 Paramètres:
-  -i:  affichage des informations de compression enregistrés dans stats.csv
-  -c:  compression de fichiers .txt en fichiers .huff
-  -d:  décompression de fichiers .huff en fichiers .txt
+-i:  affichage des informations de compression enregistrés dans stats.csv
+-c:  compression de fichiers .txt en fichiers .huff
+-d:  décompression de fichiers .huff en fichiers .txt
 
 **Exemple :**
 
@@ -51,7 +49,7 @@ python main.py -c input
 
 ### Sélection des fichiers
 
-Au lancement, le programme affiche la liste des fichiers `.txt` disponibles :
+Au lancement avec '-c', le programme affiche la liste des fichiers `.txt` disponibles :
 
 ```
 0. leCid.txt
@@ -71,7 +69,7 @@ Au lancement, le programme affiche la liste des fichiers `.txt` disponibles :
 
 ## Statistiques de compression
 
-Les résultats sont automatiquement sauvegardés dans `stats.csv` et consultables via l'option `i` :
+Les résultats sont automatiquement sauvegardés dans `stats.csv` et consultables via l'option `-i` :
 
 ```
 FICHIER                TAILLE_INIT   TAILLE_COMP   TAUX
