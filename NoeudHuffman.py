@@ -119,3 +119,4 @@ class NoeudHuffman(NoeudBinaire) :
                 chaine_decodee += courant.valeur[0]
                 courant = self
         return chaine_decodee
+
