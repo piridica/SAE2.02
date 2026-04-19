@@ -36,6 +36,7 @@ pip install unidecode
 ```bash
 python main.py <paramètre> <nom_dossier_entree> [nom_dossier_destination]
 ```
+
 Paramètres:
 -i:  affichage des informations de compression enregistrés dans stats.csv
 -c:  compression de fichiers .txt en fichiers .huff
