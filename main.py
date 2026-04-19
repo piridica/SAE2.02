@@ -13,49 +13,99 @@ from assets import *
 #from tests import *         Ficher tests.py à exécuter seul
 
 # ==============================================================================
-
+ 
+USAGE = """
+Usage :
+  python main.py -c <dossier>   Compresser les .txt du dossier
+  python main.py -d <dossier>   Décompresser un .huff du dossier output/
+  python main.py -i             Afficher les statistiques de compression
+"""
+ 
+USAGE2 = """
+-- un indice        ex: 1
+-- une plage        ex: (0,2)
+-- une liste        ex: [0,2,4]
+-- entrée vide      tous les fichiers
+"""
+def erreur(message):
+    print(USAGE)
+    print(f"main.py: {message}")
+    sys.exit(1)
+ 
+# ==============================================================================
+ 
 if __name__ == "__main__":
-    
-    print("\n")
-    print("="*40)
-    print("=== COMPRESSION DE TEXTE PAR HUFFMAN " + "="*3)
-    print("="*40 + "\n")
 
-    # ENTREE A L'EXECUTION: NOM DE DOSSIER CONTENANT DES FICHIERS TEXTE
-    try:
-        input_dir = sys.argv[1]
-        # On ne prend en compte que les fichiers texte
-        files = [file for file in os.listdir(input_dir) if file.endswith('.txt')]
-    except IndexError:
-        raise IndexError("Il manque un paramètre: veuillez entrer le nom du fichier cible.")
-    if len(files)==0:
-        raise FileNotFoundError("Il n'y a pas de fichiers texte dans ce dossier.")
+    # --- LECTURE DES ARGUMENTS -------------------------------------------
+    if len(sys.argv) < 2:
+        erreur("nombre d'arguments incorrect.")
+ 
+    flag = sys.argv[1]   # -c, -d ou -i
+ 
+    if flag not in ("-c", "-d", "-i"):
+        erreur(f"flag '{flag}' inconnu.")
     
-    # SELECTION DE FICHIERS POUR LA COMPRESSION
-    print("Veuillez choisir le(s) texte(s) à compresser:\n")
-    
-    affiche_fichiers(files)
-    
-    print("\n-- entrez l'un des nombres")
-    print("ou")
-    print("-- entrez une plage (ex: (1,10))")
-    print("ou")
-    print("-- entrez une liste (ex: [1,5,6,10])")
-    print("ou")
-    print("-- sélectionnez tout par défaut")
-    print("ou")
-    print("-- entrez i pour accéder aux données de compression des fichiers compressés\n")
-    
-    choix_str = input(":").strip()
-    
-    if choix_str == "i":
-        # DONNEES COMPRESSION
-        print("\n")
+    # Affichage des informations des fichiers précédemment compressés
+    if flag == "-i":
         afficher_csv("stats.csv")
-    else:
-        # COMPRESSION
-        print("\n")
-        choix = listage(choix_str)
-        compresse = compression(files,choix,input_dir)
+        sys.exit(0)
+ 
+    if flag in ("-c", "-d") and len(sys.argv) < 3:
+        erreur("nombre d'arguments incorrect.")
+ 
+    if flag in ("-c", "-d"):
+        input_dir  = sys.argv[2]   # dossier source
+        output_dir = sys.argv[3] if len(sys.argv) == 4 else ("compresse" if flag == "-c" else "decompresse")   # dossier de sortie
+ 
+        if not os.path.exists(input_dir):
+            erreur(f"le dossier '{input_dir}' n'existe pas.")
+ 
+    # --- COMPRESSION ------------------------------------------------------
+    if flag == "-c":
+ 
+        # On ne prend en compte que les fichiers texte
+        files_txt = [f for f in os.listdir(input_dir) if f.endswith('.txt')]
+        if len(files_txt) == 0:
+            raise FileNotFoundError(f"Aucun fichier .txt trouvé dans '{input_dir}'.")
+ 
+        # SELECTION DE FICHIERS POUR LA COMPRESSION
+        print("\nVeuillez choisir le(s) texte(s) à compresser :\n")
+        affiche_fichiers(files_txt)
+        print(USAGE2)
+ 
+        choix_str = input(": ").strip()
+        print()
+        liste = listage(choix_str)
+        compression(files_txt, liste, input_dir, output_dir)
+ 
+    # --- DECOMPRESSION ---------------------------------------------------
+    elif flag == "-d":
 
+        if not os.path.exists(input_dir):
+            raise FileNotFoundError(f"Aucun dossier {input_dir} trouvé. Compressez d'abord un fichier.")
+ 
+        # On ne prend en compte que les fichiers .huff
+        files_huff = [f for f in os.listdir(input_dir) if f.endswith('.huff')]
+        if len(files_huff) == 0:
+            raise FileNotFoundError(f"Aucun fichier .huff trouvé dans {input_dir}.")
+
+        # SELECTION DE FICHIERS POUR LA DECOMPRESSION
+        print("\nVeuillez choisir le(s) fichier(s) à décompresser :\n")
+        for i, f in enumerate(files_huff):
+            print(f"  {i}. {f}")
+        print(USAGE2)
+ 
+        choix_str = input(": ").strip()
+        print()
+        liste = listage(choix_str)
+ 
+        if len(liste) != 0:
+            try:
+                files_huff = [files_huff[i] for i in liste]
+            except IndexError:
+                raise IndexError("Veuillez entrer des indices correspondant à ceux spécifiés.")
+        
+        for fichier_huff in files_huff:
+            chemin_huff = os.path.join(input_dir, fichier_huff)
+            decompression(chemin_huff, output_dir)
 
