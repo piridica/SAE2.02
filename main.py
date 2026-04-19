@@ -58,3 +58,4 @@ if __name__ == "__main__":
         choix = listage(choix_str)
         compresse = compression(files,choix,input_dir)
 
+
