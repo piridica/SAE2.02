@@ -200,3 +200,4 @@ class NoeudBinaire() :
                     queue.append(current.droite)  # Enfiler le fils droit
         return result
 
+
