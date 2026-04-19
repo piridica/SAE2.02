@@ -36,13 +36,17 @@ pip install unidecode
 Lancer le programme en passant le **nom du dossier** contenant les fichiers `.txt` en argument :
 
 ```bash
-python main.py <nom_du_dossier>
+python main.py <paramètre> <nom_dossier_entree> [nom_dossier_destination]
 ```
+Paramètres:
+  -i:  affichage des informations de compression enregistrés dans stats.csv
+  -c:  compression de fichiers .txt en fichiers .huff
+  -d:  décompression de fichiers .huff en fichiers .txt
 
 **Exemple :**
 
 ```bash
-python main.py input
+python main.py -c input
 ```
 
 ### Sélection des fichiers
