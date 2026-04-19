@@ -20,10 +20,10 @@ class NoeudHuffman(NoeudBinaire) :
         if len(valeur) != 2:
             raise ValueError("valeur doit être de taille 2")
             
-        s,es=valeur
-        if not isinstance(s,str):
+        c,e=valeur
+        if not isinstance(c,str):
             raise TypeError("le 1er élément doit être un caractère")
-        if not isinstance(es,int):
+        if not isinstance(e,int):
             raise TypeError("le 2e élément doit être un entier")
             
         super().__init__(valeur,gauche,droite)
@@ -120,3 +120,45 @@ class NoeudHuffman(NoeudBinaire) :
                 courant = self
         return chaine_decodee
 
+    # --- METHODES: SERIALISATION ----------------------------------------------
+ 
+    def serialiser(self):
+        """
+        Sérialise l'arbre de Huffman en une chaîne de caractères (parcours préfixe) :
+        - Nœud interne → '0'
+        - Feuille       → '1' + le caractère
+        Cette chaîne permet de reconstruire l'arbre exactement à l'identique.
+        Le séparateur § étant hors ASCII et unidecode() ne le produisant jamais,
+        aucun échappement n'est nécessaire.
+        """
+        if self.est_feuille():
+            return "1" + self.valeur[0]
+        else:
+            gauche_ser = self.gauche.serialiser() if self.a_gauche() else ""
+            droite_ser = self.droite.serialiser() if self.a_droite() else ""
+            return "0" + gauche_ser + droite_ser
+ 
+    @staticmethod
+    def deserialiser(chaine, index=0):
+        """
+        Reconstruit un arbre de Huffman depuis une chaîne sérialisée.
+        @param chaine : la chaîne produite par serialiser()
+        @param index  : position courante dans la chaîne (pour la récursion)
+        @return       : (NoeudHuffman reconstruit, nouvel index)
+        """
+        if index >= len(chaine):
+            raise ValueError("Chaîne sérialisée invalide ou tronquée.")
+ 
+        type_noeud = chaine[index]
+        index += 1
+ 
+        if type_noeud == "1":
+            c = chaine[index]
+            index += 1
+            return NoeudHuffman((c, 0)), index
+ 
+        else:  # type_noeud == "0" → nœud interne
+            gauche, index = NoeudHuffman.deserialiser(chaine, index)
+            droite, index = NoeudHuffman.deserialiser(chaine, index)
+            chaine_fusionnee = gauche.chaine() + droite.chaine()
+            return NoeudHuffman((chaine_fusionnee, 0), gauche, droite), index
