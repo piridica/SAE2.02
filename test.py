@@ -1,7 +1,7 @@
 # C5 - Samuel, Thenujan, Victor
-# Fichier tests.py
+# Fichier test.py
 
-# importation des classes
+# Imports de classes
 from NoeudBinaire import *
 from NoeudHuffman import *
 
@@ -258,7 +258,7 @@ def test_encodage( arbre ) :
         print(f"  '{caractere}' -> {code}")
     return codes
 
-# Compression
+
 def test_compression( chaine, arbre, codes ) :
     compresse = arbre.compresser(chaine, codes)
     taille_initiale = len(chaine) * 8
@@ -328,6 +328,7 @@ def test_noeudhuffman() :
 # ==============================================================================
 
 if __name__ == "__main__":
-  test_noeudbinaire()
-  test_noeudhuffman()
+    test_noeudbinaire()
+    test_noeudhuffman()
+
 
